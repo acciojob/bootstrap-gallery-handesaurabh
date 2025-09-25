@@ -1,31 +1,37 @@
-const images = [
-			{ src: 'https://storage.googleapis.com/acciojob-open-file-collections/image1.jpg', alt: 'Image1' },
-			{ src: 'https://storage.googleapis.com/acciojob-open-file-collections/image2.jpg', alt: 'Image2' },
-			{ src: 'https://storage.googleapis.com/acciojob-open-file-collections/image3.jpg', alt: 'Image3' },
-			{ src: 'https://storage.googleapis.com/acciojob-open-file-collections/image4.jpg', alt: 'Image4' },
-			{ src: 'https://storage.googleapis.com/acciojob-open-file-collections/image5.jpg', alt: 'Image5' },
-			{ src: 'https://storage.googleapis.com/acciojob-open-file-collections/image6.jpg', alt: 'Image6' }
-		];
-		
-		function showImage(src, alt) {
-			// Find the index of the clicked image
-			const imageIndex = images.findIndex(img => img.src === src);
-			
-			// Set the carousel to show the clicked image
-			const carousel = new bootstrap.Carousel(document.getElementById('imageCarousel'));
-			carousel.to(imageIndex);
-			
-			// Show the modal
-			const modal = new bootstrap.Modal(document.getElementById('imageModal'));
-			modal.show();
+function openLightbox(lightboxId) {
+			document.getElementById(lightboxId).style.display = 'block';
+			document.body.style.overflow = 'hidden';
 		}
 		
-		// Add click event listeners to all images
+		function closeLightbox(lightboxId) {
+			document.getElementById(lightboxId).style.display = 'none';
+			document.body.style.overflow = 'auto';
+		}
+		
 		document.addEventListener('DOMContentLoaded', function() {
-			const imageElements = document.querySelectorAll('.card-img-top');
-			imageElements.forEach(function(img, index) {
+			const images = document.querySelectorAll('.card-img-top');
+			images.forEach(function(img, index) {
 				img.addEventListener('click', function() {
-					showImage(this.src, this.alt);
+					openLightbox('lightbox' + (index + 1));
 				});
+			});
+			
+			const lightboxes = document.querySelectorAll('.lightbox');
+			lightboxes.forEach(function(lightbox) {
+				lightbox.addEventListener('click', function(e) {
+					if (e.target === this) {
+						closeLightbox(this.id);
+					}
+				});
+			});
+			
+			document.addEventListener('keydown', function(event) {
+				if (event.key === 'Escape') {
+					lightboxes.forEach(function(lightbox) {
+						if (lightbox.style.display === 'block') {
+							closeLightbox(lightbox.id);
+						}
+					});
+				}
 			});
 		});
